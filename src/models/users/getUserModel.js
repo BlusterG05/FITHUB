@@ -1,15 +1,15 @@
 const { query } = require('../../db/config');
 
-const getTrainerModel = async (cedula) => {
+const getUserModel = async (cedula) => {
     const sql = `
-        SELECT * FROM get_trainer($1)
+        SELECT * FROM get_user($1)
     `;
     try {
         const res = await query(sql, [cedula]);
         return res.rows[0];
     } catch (err) {
-        throw new Error('Error fetching trainer: ' + err.message);
+        throw new Error('Error fetching user: ' + err.message);
     }
 };
 
-module.exports = getTrainerModel;
+module.exports = getUserModel;
