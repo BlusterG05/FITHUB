@@ -1,0 +1,188 @@
+
+-- Procedimiento para crear una nueva máquina con manejo de errores
+CREATE OR REPLACE FUNCTION create_machine(
+    machine_name VARCHAR,
+    machine_acquired_at DATE,
+    machine_category_id INT,
+    machine_group_id INT,
+    machine_discipline_id INT
+)
+    RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        INSERT INTO Machines (
+            machine_name, machine_acquired_at, machine_category_id,
+            machine_group_id, machine_discipline_id
+        ) VALUES (
+                     machine_name, machine_acquired_at, machine_category_id,
+                     machine_group_id, machine_discipline_id
+                 );
+    EXCEPTION
+        WHEN foreign_key_violation THEN
+            RAISE EXCEPTION 'Invalid category_id, group_id, or discipline_id: Foreign key constraint violation';
+        WHEN others THEN
+            RAISE EXCEPTION 'An error occurred: %', SQLERRM;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Procedimiento para eliminar una máquina por ID con manejo de errores
+CREATE OR REPLACE FUNCTION delete_machine(machine_delete_id INT)
+    RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        DELETE FROM Machines WHERE machine_id = machine_delete_id;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No machine found with ID: %', machine_delete_id;
+        END IF;
+    EXCEPTION
+        WHEN others THEN
+            RAISE EXCEPTION 'An error occurred: %', SQLERRM;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Procedimiento para editar una máquina por ID con manejo de errores y condiciones seguras
+CREATE OR REPLACE FUNCTION edit_machine(
+    p_machine_id INT,
+    p_machine_name VARCHAR,
+    p_machine_acquired_at DATE,
+    p_machine_category_id INT,
+    p_machine_group_id INT,
+    p_machine_discipline_id INT
+)
+RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        UPDATE Machines
+        SET 
+            machine_name = p_machine_name,
+            machine_acquired_at = p_machine_acquired_at,
+            machine_category_id = p_machine_category_id,
+            machine_group_id = p_machine_group_id,
+            machine_discipline_id = p_machine_discipline_id
+        WHERE machine_id = p_machine_id;
+        
+        -- Verificar si la fila fue encontrada y actualizada
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No machine found with ID: %', p_machine_id;
+        END IF;
+    EXCEPTION
+        WHEN foreign_key_violation THEN
+            RAISE EXCEPTION 'Invalid category_id, group_id, or discipline_id: Foreign key constraint violation';
+        WHEN others THEN
+            RAISE EXCEPTION 'An error occurred: %', SQLERRM;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Procedimiento para obtener todas las máquinas sin límite
+CREATE OR REPLACE FUNCTION get_all_machines()
+    RETURNS TABLE (
+                      machine_id INT,
+                      machine_name VARCHAR,
+                      machine_acquired_at DATE,
+                      machine_category_name VARCHAR,
+                      machine_group_name VARCHAR,
+                      machine_discipline_name VARCHAR
+                  ) AS $$
+BEGIN
+    RETURN QUERY
+        SELECT
+            m.machine_id AS id,
+            m.machine_name AS Nombre,
+            m.machine_acquired_at AS Fecha_adquisicion,
+            c.category_name AS Categoria,
+            g.group_name AS Grupo,
+            d.discipline_name AS Disciplina
+        FROM Machines m
+                 LEFT JOIN Categories c ON m.machine_category_id = c.category_id
+                 LEFT JOIN Groups g ON m.machine_group_id = g.group_id
+                 LEFT JOIN Disciplines d ON m.machine_discipline_id = d.discipline_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Procedimiento para obtener todas las máquinas con límite opcional
+CREATE OR REPLACE FUNCTION get_machines(p_limit INT)
+    RETURNS TABLE (
+                      machine_id INT,
+                      machine_name VARCHAR,
+                      machine_acquired_at DATE,
+                      machine_category_name VARCHAR,
+                      machine_group_name VARCHAR,
+                      machine_discipline_name VARCHAR
+                  ) AS $$
+BEGIN
+    RETURN QUERY EXECUTE format('
+        SELECT
+            m.machine_id AS id,
+            m.machine_name AS Nombre,
+            m.machine_acquired_at AS Fecha_adquisicion,
+            c.category_name AS Categoria,
+            g.group_name AS Grupo,
+            d.discipline_name AS Disciplina
+        FROM Machines m
+        LEFT JOIN Categories c ON m.machine_category_id = c.category_id
+        LEFT JOIN Groups g ON m.machine_group_id = g.group_id
+        LEFT JOIN Disciplines d ON m.machine_discipline_id = d.discipline_id
+        LIMIT %L', p_limit);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Procedimiento para obtener todas las máquinas sin límite
+CREATE OR REPLACE FUNCTION get_all_machines()
+    RETURNS TABLE (
+                      machine_id INT,
+                      machine_name VARCHAR,
+                      machine_acquired_at DATE,
+                      machine_category_name VARCHAR,
+                      machine_group_name VARCHAR,
+                      machine_discipline_name VARCHAR
+                  ) AS $$
+BEGIN
+    RETURN QUERY
+        SELECT
+            m.machine_id AS id,
+            m.machine_name AS Nombre,
+            m.machine_acquired_at AS Fecha_adquisicion,
+            c.category_name AS Categoria,
+            g.group_name AS Grupo,
+            d.discipline_name AS Disciplina
+        FROM Machines m
+                 LEFT JOIN Categories c ON m.machine_category_id = c.category_id
+                 LEFT JOIN Groups g ON m.machine_group_id = g.group_id
+                 LEFT JOIN Disciplines d ON m.machine_discipline_id = d.discipline_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Procedimiento para obtener una máquina por ID
+CREATE OR REPLACE FUNCTION get_machine_byID(machine_serch_id INT)
+    RETURNS TABLE (
+                      machine_id INT,
+                      machine_name VARCHAR,
+                      machine_acquired_at DATE,
+                      machine_category_name VARCHAR,
+                      machine_group_name VARCHAR,
+                      machine_discipline_name VARCHAR
+                  ) AS $$
+BEGIN
+    RETURN QUERY
+        SELECT
+            m.machine_id AS id,
+            m.machine_name AS Nombre,
+            m.machine_acquired_at AS Fecha_adquisicion,
+            c.category_name AS Categoria,
+            g.group_name AS Grupo,
+            d.discipline_name AS Disciplina
+        FROM Machines m
+                 LEFT JOIN Categories c ON m.machine_category_id = c.category_id
+                 LEFT JOIN Groups g ON m.machine_group_id = g.group_id
+                 LEFT JOIN Disciplines d ON m.machine_discipline_id = d.discipline_id
+        WHERE m.machine_id = machine_serch_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
