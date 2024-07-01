@@ -2,7 +2,61 @@
 
 ## Estructura del Proyecto
 
-Descripción de la estructura de archivos y carpetas del proyecto.
+# Estructura del Proyecto
+
+La estructura del proyecto está organizada de la siguiente manera:
+
+```bash
+src
+    ├───controllers
+    │   ├───exercises
+    │   ├───machines
+    │   ├───memberships
+    │   ├───trainers
+    │   └───users
+    ├───db
+    │   └───config.js
+    ├───middlewares
+    │   └───authenticateUser.js
+    ├───models
+    │   ├───exercises
+    │   ├───machines
+    │   ├───memberships
+    │   ├───trainers
+    │   └───users
+    ├───routes
+    └───services
+        ├───exercises
+        ├───machines
+        ├───memberships
+        ├───trainers
+        └───users
+```
+# Descripción de Carpetas y Archivos
+
+## controllers
+Contiene los controladores para manejar la lógica de negocio de las diferentes entidades como ejercicios, máquinas, membresías, entrenadores y usuarios.
+
+## db
+Incluye la configuración de la base de datos.
+
+## config.js
+Archivo de configuración para la conexión a la base de datos.
+
+## middlewares
+Contiene los middleware utilizados en la aplicación.
+
+- **authenticateUser.js**: Middleware para autenticar usuarios.
+
+## models
+Contiene los modelos de datos para las diferentes entidades como ejercicios, máquinas, membresías, entrenadores y usuarios.
+
+## routes
+Define las rutas de la API y asocia cada ruta con su controlador correspondiente.
+
+## services
+Contiene los servicios que encapsulan la lógica de negocio y se comunican con los modelos de datos.
+
 
 ## Configuración y Ejecución Local
 
@@ -27,11 +81,6 @@ El proyecto está configurado para usar GitHub Actions para CI/CD. La configurac
 - **Pruebas Unitarias:** Ejecuta pruebas usando jest.
 - **Análisis de Código:** Realiza análisis de código estático con SonarCloud.
 - **Despliegue en Producción:** Despliega automáticamente a GitHub Pages.
-
-### Scripts y Configuraciones
-
-Archivo de configuración: `.github/workflows/ci.yml`
-
 
 ## Scripts y Configuraciones
 Archivo de configuración: `.github/workflows/ci.yml`
