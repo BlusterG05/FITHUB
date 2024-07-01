@@ -5,10 +5,11 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "build":"npm install",
+    "build": "npm install",
     "dev": "node ./src/app.js",
     "db_backup": "node ./db_schema/backups_manager.js",
-    "migration": "node ./db_schema/migration_manager.js"
+    "migration": "node ./db_schema/migration_manager.js",
+    "lint": "eslint ."
   },
   "author": "Jeremy Collaguazo",
   "license": "ISC",
@@ -20,6 +21,9 @@
     "pg": "^8.12.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.6.0",
+    "eslint": "^9.6.0",
+    "globals": "^15.7.0",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
   }
