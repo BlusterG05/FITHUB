@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const { password } = require('pg/lib/defaults');
 require('dotenv').config();
 
 const pool = new Pool({
@@ -10,7 +11,7 @@ const pool = new Pool({
 });
 
 pool.on('connect', () => {
-    console.log('Connected to the database');
+    console.log('Processing query');
 });
 
 pool.on('error', (err) => {
@@ -18,5 +19,6 @@ pool.on('error', (err) => {
 });
 
 module.exports = {
-    query: (text, params) => pool.query(text, params),
+  query: (text, params) => pool.query(text, params),
+  pool, // Agrega esta línea para exportar el pool
 };
