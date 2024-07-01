@@ -2,8 +2,6 @@
 
 ## Estructura del Proyecto
 
-# Estructura del Proyecto
-
 La estructura del proyecto está organizada de la siguiente manera:
 
 ```bash
@@ -25,6 +23,11 @@ src
     │   ├───trainers
     │   └───users
     ├───routes
+    │   ├───exercises.js
+    │   ├───machines.js
+    │   ├───memberships.js
+    │   ├───trainers.js
+    │   └───users.js
     └───services
         ├───exercises
         ├───machines
