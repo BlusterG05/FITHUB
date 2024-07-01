@@ -40,20 +40,20 @@ jobs:
 
     - name: Run database migrations
       env:
-        PGHOST: localhost
-        PGUSER: postgres
-        PGPASSWORD: postgres
-        PGDATABASE: testdb
-        PGPORT: 5432
+        DB_HOST: localhost
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        DB_NAME: testdb
+        DB_PORT: 5432
       run: npm run migration
 
     - name: Run tests
       env:
-        PGHOST: localhost
-        PGUSER: postgres
-        PGPASSWORD: postgres
-        PGDATABASE: testdb
-        PGPORT: 5432
+        DB_HOST: localhost
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        DB_NAME: testdb
+        DB_PORT: 5432
       run: npm test
 
     - name: Lint code
