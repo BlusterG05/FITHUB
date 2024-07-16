@@ -5,16 +5,17 @@ const trainersRoutes = require('./routes/trainers');  // Actualización aquí
 const machinesRoutes = require('./routes/machines');
 const exercisesRoutes = require('./routes/exercises');
 const administrationRoutes = require('./routes/administrationUser');
+const authenticateUser = require ('./middlewares/authenticateUser')
 
 const app = express();
 
 app.use(bodyParser.json());
 
 
-app.use('/api/users', usersRoutes);
-app.use('/api/trainers', trainersRoutes);
-app.use('/api/machines', machinesRoutes);
-app.use('/api/exercises', exercisesRoutes);
+app.use('/api/users',authenticateUser, usersRoutes);
+app.use('/api/trainers',authenticateUser, trainersRoutes);
+app.use('/api/machines',authenticateUser, machinesRoutes);
+app.use('/api/exercises',authenticateUser, exercisesRoutes);
 app.use('/api/admin',administrationRoutes);
 
 if (require.main === module) {
