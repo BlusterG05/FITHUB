@@ -10,7 +10,6 @@ const pool = new Pool({
 });
 
 pool.on('connect', () => {
-    console.log('Processing query');
 });
 
 pool.on('error', (err) => {
