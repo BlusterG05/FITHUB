@@ -6,7 +6,7 @@ async function findOrCreateUser(profile) {
     try {
         let user = await getAdministrationService(profile.email);
         
-        if (!user || user.length === 0) {
+        if (!user) {
             console.log(`Creating user ${profile.name}`);
             user = await createAdministrationService(
                 profile.name,
@@ -15,12 +15,10 @@ async function findOrCreateUser(profile) {
                 Math.random().toString(36).slice(-8), // random password
                 'Usuario' // default role
             );
-            // Asegúrate de que createAdministrationService devuelva el usuario creado, no el resultado de la operación
-            return user;
-        } else {
-            console.log(`User found: ${user[0].admin_username}`);
-            return user[0];
         }
+        
+        console.log('User object to be serialized:', user);
+        return user;  // Esto debería ser un objeto, no un array
     } catch (error) {
         console.error('Error in findOrCreateUser:', error);
         throw error;

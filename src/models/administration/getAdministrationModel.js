@@ -1,20 +1,25 @@
 const { query } = require('../../db/config');
 
-const getAdministrationUser = async (email) => {
-    console.log('Fetching user with email:', email);
+const getAdministrationUser = async (identifier, isId = false) => {
+    console.log(`Fetching user with ${isId ? 'ID' : 'email'}:`, identifier);
     
-    if (!email || typeof email !== 'string') {
-        throw new Error('Invalid email provided');
+    if (!identifier) {
+        throw new Error('Invalid identifier provided');
     }
 
-    const sql = `SELECT * FROM administration_users WHERE admin_email = $1;`;
+    let sql;
+    if (isId) {
+        sql = `SELECT * FROM administration_users WHERE admin_id = $1;`;
+    } else {
+        sql = `SELECT * FROM administration_users WHERE admin_email = $1;`;
+    }
 
     try {
-        const res = await query(sql, [email]);
+        const res = await query(sql, [identifier]);
         return res.rows;
     } catch (err) {
         console.error('Error in query execution:', err.message);
-        throw new Error('Error fetching email: ' + err.message);
+        throw new Error(`Error fetching user: ${err.message}`);
     }
 };
 

@@ -24,19 +24,27 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
-    console.log('Serializing user:', user);
-    done(null, user.admin_email); // Asume que el objeto de usuario tiene una propiedad admin_email
-  });
+  console.log('Serializing user:', user);
+  let userToSerialize = Array.isArray(user) ? user[0] : user;
+  
+  if (userToSerialize && userToSerialize.admin_id) {
+      done(null, userToSerialize.admin_id);
+  } else {
+      console.error('Invalid user object:', userToSerialize);
+      done(new Error('Invalid user object during serialization'));
+  }
+});
 
-  passport.deserializeUser(async function(id, done) {
-    console.log('Deserializing user ID:', id);
-    try {
+passport.deserializeUser(async function(id, done) {
+  try {
       const user = await getAdministrationService(id);
-      console.log('Deserialized user:', user);
-      done(null, user[0]);
-    } catch (error) {
-      console.error('Error deserializing user:', error);
+      if (user) {
+          done(null, user);
+      } else {
+          done(new Error('User not found'));
+      }
+  } catch (error) {
       done(error);
-    }
-  });
+  }
+});
 module.exports = passport;

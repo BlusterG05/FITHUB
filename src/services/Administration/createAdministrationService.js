@@ -3,13 +3,15 @@ const bcrypt = require('bcrypt');
 
 const createAdministrationService = async (name, username, email, password, role) => {
     try {
-        // Hashear la contraseña
         const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Crear el usuario en la base de datos
         const adminUser = await createAdministrationUser(name, username, email, hashedPassword, role);
-        return adminUser;
+        
+        // Asegúrate de no devolver la contraseña hasheada
+        const { admin_password, ...userWithoutPassword } = adminUser;
+        
+        return userWithoutPassword;  // Esto debería ser un objeto, no un array
     } catch (err) {
         throw new Error('Service Error: ' + err.message);
     }

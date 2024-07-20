@@ -11,7 +11,7 @@ const createAdministrationUser = async (name,username,email,password,role) => {
     try{
         const res = await query(sql,params);
 /*         console.log('aqui en teoria se creo',res); */
-        return res;
+        return res.rows[0];
     }catch(err){
         /* console.log('aqui en teoria fallo', err) */
         throw new Error('Error creating user :' + err.message);
