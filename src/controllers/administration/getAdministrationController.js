@@ -14,7 +14,7 @@ const getAdministrationLoginController = async (req, res) => {
             const match = await bcrypt.compare(Password, hashedPassword);
             if (match) {
                 const token = jwt.sign(
-                    { id: adminUser[0].admin_id, username: adminUser[0].admin_username },
+                    { id: adminUser[0].admin_id, username: adminUser[0].admin_username, email: adminUser[0].admin_email},
                     process.env.JWT_SECRET,
                     { expiresIn: '1h' }
                 );
@@ -32,18 +32,4 @@ const getAdministrationLoginController = async (req, res) => {
     }
 };
 
-
-// getAdministrationLoginController(
-//     {
-//         body: {
-//             Mail: 'jerycohe05@gmail.com',
-//             Password: 'testpassword'
-//         }
-//     },
-//     {
-//         status: (code) => ({
-//             send: (message) => console.log(`Response: ${code}, Message: ${message}`)
-//         })
-//     }
-// );
 module.exports = getAdministrationLoginController;

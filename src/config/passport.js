@@ -24,9 +24,13 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
-    console.log('Serializing user:', user);
-    done(null, user.admin_email); // Asume que el objeto de usuario tiene una propiedad admin_email
-  });
+  console.log('Serializing user:', user);
+  if (user && user.admin_email) {
+      done(null, user.admin_email);
+  } else {
+      done(new Error('User object does not have admin_email property'), null);
+  }
+});
 
   passport.deserializeUser(async function(id, done) {
     console.log('Deserializing user ID:', id);
