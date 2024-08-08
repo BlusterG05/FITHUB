@@ -1,5 +1,5 @@
 const createAdministrationUser = require("../../models/administration/createAdministrationModel");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const createAdministrationService = async (name, username, email, password, role) => {
     try {

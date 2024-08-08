@@ -35,7 +35,7 @@ app.get('/auth/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
     const token = generateJWT(req.user);
-    res.redirect(`http://localhost:5173/auth/callback?token=${token}`);
+    res.redirect(`http://localhost/auth/callback?token=${token}`);
   }
 );
 
